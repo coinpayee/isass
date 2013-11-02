@@ -23,12 +23,11 @@ class Test(unittest.TestCase):
   float: left
 """
 
-        expected_res = """
-.page-footer .copy-right, .page-footer .bottom {
+        expected_res = """.page-footer .bottom, .page-footer .copy-right {
   display: block;
-  width:100%;
-  float: left; }
-"""          
+  width: 100%;
+  float: left;
+}"""          
         res = isass.compile(sass)
         self.assertEqual(res.strip(),expected_res.strip())
         
@@ -49,7 +48,8 @@ class Test(unittest.TestCase):
         try:
             isass.compile_file(out, *input_files)
             out.seek(0)
-
+#             expected_output_file.write(out.read())
+#             return
             res_md5 = self._get_file_md5(out)
             expected_md5 = self._get_file_md5(expected_output_file)             
             self.assertEqual(res_md5, expected_md5)
@@ -59,10 +59,6 @@ class Test(unittest.TestCase):
             for f in input_files:
                 f.close()
             expected_output_file.close()
-                
-                
-         
-        
 
 
 if __name__ == "__main__":
