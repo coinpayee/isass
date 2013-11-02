@@ -3,3 +3,7 @@
 *.pyo
 .svn
 _svn
+.pydevproject
+.project
+.settings
+.settings/*
