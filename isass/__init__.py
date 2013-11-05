@@ -5,7 +5,7 @@ from .compiler import compile,compile_file
 
 
 
-# live(lib_dirs,outputs)
+# live(outputs,lib_dirs=None)
 
 
 __all__ = ['__version__',

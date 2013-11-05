@@ -127,9 +127,18 @@ def _compile_with_scss(sass,search_dirs=None):
 def compile(sass_string,lib_dirs=None):
     return _compile_with_scss(sass_string,search_dirs=lib_dirs)
 
+def _get_file(f,mode='r'):
+    if isinstance(f, basestring):
+        return open(f,mode)
+    else:
+        return f
+        
+
 def compile_file(output_file,lib_dirs=None,*input_files):
     inp = ''
     for input in input_files:
-        inp += input.read()
+        with _get_file(input) as f: 
+            inp += f.read()
     res = compile(inp,lib_dirs=lib_dirs)
-    output_file.write(res)
+    with _get_file(output_file,mode='w') as fw:
+        fw.write(res)

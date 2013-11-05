@@ -24,7 +24,6 @@ setup(
     long_description=description,
     license='MIT',
     install_requires=['pyscss>=1.2.0',
-                      'sassin>=0.9',
                       'watchdog>=0.6.0'],
     packages=['isass'],
     scripts=['scripts/isass'],
