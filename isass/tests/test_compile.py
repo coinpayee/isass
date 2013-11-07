@@ -31,8 +31,6 @@ class Test(unittest.TestCase):
 }"""          
         res = isass.get_css(sass)
         self.assertEqual(res.strip(),expected_res.strip())
-        
-
             
 
 if __name__ == "__main__":
