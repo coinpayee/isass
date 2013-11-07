@@ -6,7 +6,7 @@ Created on:    Nov 1, 2013
 
 import os
 import StringIO
-from re import search
+
 
 # attempt to load PySCSS module
 try:
@@ -17,7 +17,7 @@ except:
     compile_scss = None
 
 
-def _compile(sass, source_fname='',search_dirs=None):
+def scss_from_sass(sass, source_fname=''):
     output_buffer = StringIO.StringIO()
 
     state = {
@@ -61,15 +61,10 @@ def _compile(sass, source_fname='',search_dirs=None):
                 if import_fname.startswith('"'):
                     import_fname = import_fname[1:-1]
                 
-                if search_dirs:
-                    for d in search_dirs:
-                        if os.path.isfile(os.path.join(d,import_fname)):
-                            import_fname = os.path.join(d,import_fname)
-                            break
                 
                 if not os.path.isfile(import_fname):
                     raise IOError('Error: @import {0} not found at {1}:{2}'.format(import_fname, source_fname, i_line))
-                state['prev_line'] = _compile_from_file(import_fname)
+                state['prev_line'] = scss_from_sassfile(import_fname)
             
             elif not is_comment and state['prev_line']:
                 state['prev_line'] += ';'
@@ -112,33 +107,16 @@ def _compile(sass, source_fname='',search_dirs=None):
     return output_buffer.getvalue()
 
 
-def _compile_from_file(sass_fname):
+def scss_from_sassfile(sass_fname):
     with open(sass_fname) as f:
         sass_text = f.read()
-    return _compile(sass_text, source_fname=sass_fname)
+    return scss_from_sass(sass_text, source_fname=sass_fname)
 
 
-def _compile_with_scss(sass,search_dirs=None):
+def css_from_sass(sass):
     if compile_scss is None:
         raise "Error: couldn't load a SCSS compiler"
-    scss_text = _compile(sass,search_dirs=search_dirs)
+    scss_text = scss_from_sass(sass)
     return compile_scss(scss_text)
 
-def compile(sass_string,lib_dirs=None):
-    return _compile_with_scss(sass_string,search_dirs=lib_dirs)
 
-def _get_file(f,mode='r'):
-    if isinstance(f, basestring):
-        return open(f,mode)
-    else:
-        return f
-        
-
-def compile_file(output_file,lib_dirs=None,*input_files):
-    inp = ''
-    for input in input_files:
-        with _get_file(input) as f: 
-            inp += f.read()
-    res = compile(inp,lib_dirs=lib_dirs)
-    with _get_file(output_file,mode='w') as fw:
-        fw.write(res)
