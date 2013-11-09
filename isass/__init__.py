@@ -1,10 +1,19 @@
 
 
 __version__ = '0.1a'
-from .compiler import css_from_sass,scss_from_sass
+from .compiler import SassCompiler
+from .watch import SassObserver
 
-get_css = css_from_sass
-get_scss = scss_from_sass
+def get_css(sass, lib_dirs=None):
+    c = SassCompiler(lib_dirs=lib_dirs)
+    c.read_string(sass)
+    return c.get_css()
+    
+def get_scss(sass, lib_dirs=None):
+    c = SassCompiler(lib_dirs=lib_dirs)
+    c.read_string(sass)
+    return c.get_scss()
+
 
 
 # live(outputs,lib_dirs=None)
@@ -12,9 +21,9 @@ get_scss = scss_from_sass
 
 __all__ = ['__version__',
            'get_css',
-           'css_from_sass',
            'get_scss',
-           'scss_from_sass']
+           'SassCompiler',
+           'SassObserver']
  
 
     

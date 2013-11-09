@@ -1,86 +1,65 @@
-
+# -*- coding: utf-8 -*-
+'''
+Created on:    Nov 10, 2013
+@author:        vahid
+'''
+from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler, FileMovedEvent,\
-    FileCreatedEvent #, FileDeletedEvent, FileModifiedEvent
-import helpers
-import compiler
-import os
-import time
-import traceback
+from isass import SassCompiler
+import os.path
+import glob
 
-def write_out(outfile,source_dirs,lib_dirs):
-    try:
-        source_files = helpers.get_source_files(source_dirs)
-        compiler.compile_file(outfile, lib_dirs=lib_dirs,*source_files)
-    except:
-        traceback.print_exc()
+def split_paths(p):
+    if isinstance(p,basestring):
+        res = p.split(',')
+    else:
+        res = p
+    return [os.path.abspath(i.strip()) for i in res ]
+
+def distinct(l):
+    return list(set(l))
 
 class IsassEventHandler(FileSystemEventHandler):
-    def __init__(self,outfile,source_dirs,lib_dirs):
+    extension = '.sass'
+    def __init__(self,outfile,dirs,lib_dirs = None):
         self.outfile = outfile
-        self.source_dirs = source_dirs
+        self.dirs = dirs
         self.lib_dirs = lib_dirs
         super(FileSystemEventHandler, self).__init__()
+        
+    def _get_source_files(self):
+        source_files = []
+        for d in self.dirs:
+            for f in glob.iglob(os.path.join(d,'*%s' % self.extension)):
+                source_files.append(os.path.abspath(f))
+        return sorted(distinct(source_files))
+        
+    def write_out(self):
+        compiler = SassCompiler(lib_dirs=self.lib_dirs)
+        for sf in self._get_source_files():
+            compiler.read_file(sf)
+        with open(self.outfile,'w') as of:
+            of.write(compiler.get_css())
+        
         
     def on_any_event(self,event):
         paths = []
         if hasattr(event,'src_path'):
-            paths.append(os.path.abspath(event.src_path))
+            paths += split_paths(event.src_path)
         if hasattr(event,'dest_path'):
-            paths.append(os.path.abspath(event.dest_path))
+            paths += split_paths(event.dest_path)
         
-        for p in paths:
-            if isinstance(event,FileCreatedEvent) or \
-                p in self.source_files or \
-                os.path.dirname(p) in self.lib_dirs:
-                
-                source_files = helpers.get_source_files(self.source_dirs)
-                compiler.compile_file(self.outfile, lib_dirs=self.lib_dirs,*source_files)
-                break
+        paths = [p for p in paths if p.endswith(self.extension)]
+        if len(paths):
+            # One or more sass file changes, trying to regenerate output
+            self.write_out()
 
 
-
-def live(outputs,lib_dirs=None):
-    for outfile, source_dirs in outputs:
-        write_out(outfile, source_dirs, lib_dirs)
-        
+class SassObserver(Observer):
     
-    
-        
-
-
-
-
-
-
-def live(outputs,lib_dirs=None):
-    
-    if lib_dirs:
-        search_dirs = [sd[:-1] if sd.endswith('/') else sd for sd in lib_dirs]
-        
-    for outfile, source_dirs in outputs:
-        source_files = helpers.get_source_files(source_dirs)
-        compiler.compile_file(outfile, lib_dirs=search_dirs,*source_files)
-        
-        
-    
-            
-
-
-    source_files = helpers.get_source_files(sources)
-    watch_dirs = [os.path.dirname(f) for f in source_files] + search_dirs
-    watch_dirs = list(set(watch_dirs))
-    recursive = True
-
-    event_handler = IsassEventHandler(source_files, search_dirs)
-    observer = Observer()
-    for d in watch_dirs:
-        observer.schedule(event_handler, path=d, recursive=recursive)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()    
+    def add_output(self,outfile,dirs=None,lib_dirs=None):
+        dirs = distinct(split_paths(dirs))
+        handler = IsassEventHandler(outfile, dirs,lib_dirs=lib_dirs)
+        handler.write_out()
+        for d in dirs:
+            self.schedule(handler, d, recursive=True)

@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import argparse
+from isass import helpers
+
+parser = argparse.ArgumentParser(description='sass compiler.')
+parser.add_argument('sources', nargs='*', default=['.'], help='Source files or directories to process.example: `./*.sass` or `.`')
+parser.add_argument('-o', '--output', metavar='OUTPUT', default="style.css" ,dest='output', help='Output file, default: style.css.')
+parser.add_argument('-w','--watch', dest='watch', action='store_true', help='Watch for modifications, and update output.')
+parser.add_argument('-s','--scss', dest='scss', action='store_true', help='Skip scss compilation, just return scss contents.')
+
+def main():
+    global args
+    
+    args = parser.parse_args()
+    helpers.write_out(args.sources,args.output,scss=not args.scss)
+
+    if args.watch:
+        from sassin import watch
+        watch.start(args.sources,args.output,scss=not args.scss)
+    
+
+if __name__ == '__main__':
+    main()
+    
+        

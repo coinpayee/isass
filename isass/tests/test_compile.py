@@ -6,6 +6,7 @@ Created on Nov 1, 2013
 '''
 import unittest
 import isass
+import os.path
 from nose.tools import raises
 
 
@@ -13,6 +14,9 @@ def splitlines(text):
     return filter(lambda l: l.strip(), text.splitlines())
 
 class Test(unittest.TestCase):
+    
+    def setUp(self):
+        self.lib_dirs = [os.path.dirname(__file__)]
 
     def testCompileString(self):
 
@@ -37,7 +41,7 @@ body {
   float: left;
   color: #333333;
 }"""          
-        res = isass.get_css(sass)
+        res = isass.get_css(sass,lib_dirs=self.lib_dirs)
         self.assertEqual(splitlines(res),splitlines(expected_res))
         
     def test_indent(self):
@@ -96,7 +100,7 @@ body {
         in_sass = """
 @import colors.sass
     """
-        out_css = isass.get_css(in_sass)
+        out_css = isass.get_css(in_sass,lib_dirs=self.lib_dirs)
         out_lines = splitlines(out_css)
         test_css = """
 body {
