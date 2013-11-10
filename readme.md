@@ -68,18 +68,22 @@ The canonical syntax reference is part of the [Ruby Sass documentation](http://s
       
 #### CLI examples:
 
-    # Read SASS from sources.sass , and writes produced CSS into standard output
+ Read SASS from sources.sass , and writes produced CSS into standard output
+ 
     $ isass < source.sass
     $ isass < source.sass > out.css
 
-    # Read SASS from all *.sass files in sources, extra-sources dirs and myfile.sass , then writes produced CSS into standard output
+ Read SASS from all *.sass files in sources, extra-sources dirs and myfile.sass , then writes produced CSS into standard output
+ 
     $ isass sources/ extra-sources/ myfile.sass > out.css
     
-    # You can use -o or --output options to write the generated result into specific file.
+ You can use -o or --output options to write the generated result into specific file.
+ 
     $ isass -o out.css sources/
 
+ Generates SCSS instead of CSS, from SASS file
+ 
     $ isass -c < source.sass
-    # Generates SCSS instead of CSS, from SASS file
     
     
 
