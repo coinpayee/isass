@@ -6,6 +6,14 @@ Created on:    Nov 10, 2013
 import os
 import glob
 
+def purifylines(text):
+    return [ j for j in 
+            [i.strip().replace('}','').replace('{','').replace('; ',';') for i in splitlines(text)] if j.strip()]
+
+def splitlines(text):
+    return [i.strip() for i in text.splitlines() if i.strip()]
+
+
 def split_paths(p):
     if isinstance(p,basestring):
         res = p.split(',')

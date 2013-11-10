@@ -14,6 +14,8 @@ class TestWatchdog(unittest.TestCase):
     
     def setUp(self):
         self.watch_dir = os.path.join(os.path.dirname(__file__),'watch_dir')
+        if not os.path.exists(self.watch_dir):
+            os.mkdir(self.watch_dir)
         self.sass_file =  os.path.join(self.watch_dir,'00-towatch.sass')
         self.out_file  = os.path.join(self.watch_dir,'out.css')
         with open(self.sass_file,'w') as f:
