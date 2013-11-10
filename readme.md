@@ -42,7 +42,7 @@ From source:
     
 ### Syntax Reference
 
-The canonical syntax reference is part of the [Ruby Sass documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#css_extensions)
+The canonical syntax reference is [sass-lang.com](http://sass-lang.com/guide)
 
 ### Command Line Interface
 
