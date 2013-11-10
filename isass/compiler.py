@@ -6,6 +6,7 @@ Created on:    Nov 1, 2013
 
 import os
 import StringIO
+from isass.helpers import distinct
 
 
 # attempt to load PySCSS module
@@ -18,7 +19,7 @@ except:
 
 class SassCompiler(object):
     def __init__(self,lib_dirs=None):
-        self.lib_dirs = lib_dirs
+        self.lib_dirs = sorted(distinct(lib_dirs))
         self._scss_buffer = ''
 
     def scss_from_sass(self,sass,source_fname=None):

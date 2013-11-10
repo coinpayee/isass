@@ -5,19 +5,9 @@ Created on:    Nov 10, 2013
 '''
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
+from isass.helpers import get_source_dirs,get_source_files,distinct,split_paths
 from isass import SassCompiler
-import os.path
-import glob
 
-def split_paths(p):
-    if isinstance(p,basestring):
-        res = p.split(',')
-    else:
-        res = p
-    return [os.path.abspath(i.strip()) for i in res ]
-
-def distinct(l):
-    return list(set(l))
 
 class IsassEventHandler(FileSystemEventHandler):
     extension = '.sass'
@@ -27,16 +17,15 @@ class IsassEventHandler(FileSystemEventHandler):
         self.lib_dirs = lib_dirs
         super(FileSystemEventHandler, self).__init__()
         
-    def _get_source_files(self):
-        source_files = []
-        for d in self.dirs:
-            for f in glob.iglob(os.path.join(d,'*%s' % self.extension)):
-                source_files.append(os.path.abspath(f))
-        return sorted(distinct(source_files))
-        
     def write_out(self):
-        compiler = SassCompiler(lib_dirs=self.lib_dirs)
-        for sf in self._get_source_files():
+        
+        lib_dirs = get_source_dirs(self.dirs)
+        if self.lib_dirs:
+            lib_dirs += self.lib_dirs
+        lib_dirs = distinct(lib_dirs)
+        
+        compiler = SassCompiler(lib_dirs=lib_dirs)
+        for sf in get_source_files(self.dirs,extension=self.extension):
             compiler.read_file(sf)
         with open(self.outfile,'w') as of:
             of.write(compiler.get_css())

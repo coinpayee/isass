@@ -1,23 +1,72 @@
 #!/usr/bin/env python
 
 import argparse
+import os
+import sys
+
+try:
+    import isass
+except ImportError:
+    thisdir = os.path.abspath( os.path.dirname(__file__))
+    if thisdir.endswith('isass/scripts'):
+        sys.path.append(os.path.join(thisdir,'..'))
+    import isass
+
 from isass import helpers
 
 parser = argparse.ArgumentParser(description='sass compiler.')
-parser.add_argument('sources', nargs='*', default=['.'], help='Source files or directories to process.example: `./*.sass` or `.`')
-parser.add_argument('-o', '--output', metavar='OUTPUT', default="style.css" ,dest='output', help='Output file, default: style.css.')
+parser.add_argument('sources', nargs='*', default=[], help='Source files or directories to process. default: standard input. example: `./*.sass` or `.`')
+parser.add_argument('-o', '--output', metavar='OUTPUT' ,dest='output', help='Output file. default: standard output')
+parser.add_argument('-c','--scss', dest='scss', action='store_true', help='Skip scss compilation, just return scss contents.')
+parser.add_argument('-l','--lib-dir', dest='lib_dirs', nargs='*', action='append', help='library dir to search for @imports.')
+parser.add_argument('-e','--extension', dest='extension', nargs='?', default='*.sass',help='search for this file extension.')
+
+
 parser.add_argument('-w','--watch', dest='watch', action='store_true', help='Watch for modifications, and update output.')
-parser.add_argument('-s','--scss', dest='scss', action='store_true', help='Skip scss compilation, just return scss contents.')
+
+
+
+def read_source():
+    input = '' 
+    if args.sources:
+        source_files = helpers.get_source_files(args.sources, args.extension)
+        for f in source_files:
+            with open(f) as reader:
+                input += reader.read()
+                input += '\n'
+    else:
+        # reading from standard input
+        input += sys.stdin.read()
+        
+    return input
+
+def build(sass):
+    compiler = isass.SassCompiler(lib_dirs=args.lib_dirs)
+    compiler.read_string(sass)
+    if args.scss:
+        return compiler.get_scss()
+    else:
+        return compiler.get_css()
+    
 
 def main():
     global args
-    
     args = parser.parse_args()
-    helpers.write_out(args.sources,args.output,scss=not args.scss)
+    input = read_source()
+     
+    
+    if args.output:
+        with open(args.output,'w') as outfile:
+            outfile.write(build(input))
+    else:
+        print build(input)
+        return
+    
+    #helpers.write_out(args.sources,args.output,scss=not args.scss)
 
-    if args.watch:
-        from sassin import watch
-        watch.start(args.sources,args.output,scss=not args.scss)
+#     if args.watch:
+#         from sassin import watch
+#         watch.start(args.sources,args.output,scss=not args.scss)
     
 
 if __name__ == '__main__':

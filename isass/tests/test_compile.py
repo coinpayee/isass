@@ -13,7 +13,7 @@ from nose.tools import raises
 def splitlines(text):
     return filter(lambda l: l.strip(), text.splitlines())
 
-class Test(unittest.TestCase):
+class TestCompiler(unittest.TestCase):
     
     def setUp(self):
         self.lib_dirs = [os.path.dirname(__file__)]
