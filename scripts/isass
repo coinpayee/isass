@@ -3,6 +3,7 @@
 import argparse
 import os
 import sys
+import time
 
 try:
     import isass
@@ -13,7 +14,8 @@ except ImportError:
     import isass
 
 from isass import helpers
-
+from isass import SassObserver
+    
 parser = argparse.ArgumentParser(description='isass compiles SASS-indented-syntax into CSS or SCSS.')
 parser.add_argument('sources', nargs='*', default=[], help='Source files or directories to process. default: standard input. example: `./*.sass` or `.`')
 parser.add_argument('-o', '--output', metavar='OUTPUT' ,dest='output', help='Output file. default: standard output')
@@ -48,25 +50,41 @@ def build(sass):
     else:
         return compiler.get_css()
     
+def start_watchdog():
+
+    
+    # Asserts
+    assert args.output, "Please provide an output file via -o option, Standard output was not supported in watch mode."
+    source_msg = "Please provide one or more directory as sources, files and standard input was not supported in watch mode."
+    assert len(args.sources) > 0, source_msg
+    for s in args.sources:
+        assert os.path.isdir(s), source_msg
+    
+    observer = SassObserver()    
+    observer.add_output(args.output, dirs=helpers.get_source_dirs(args.sources), lib_dirs=args.lib_dirs)
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
 
 def main():
     global args
     args = parser.parse_args()
     inp = read_source()
-     
     
-    if args.output:
-        with open(args.output,'w') as outfile:
-            outfile.write(build(inp))
+    if args.watch:
+        start_watchdog()
     else:
-        print build(inp)
-        return
-    
-    #helpers.write_out(args.sources,args.output,scss=not args.scss)
-
-#     if args.watch:
-#         from sassin import watch
-#         watch.start(args.sources,args.output,scss=not args.scss)
+        if args.output:
+            with open(args.output,'w') as outfile:
+                outfile.write(build(inp))
+        else:
+            print build(inp)
+        
     
 
 if __name__ == '__main__':

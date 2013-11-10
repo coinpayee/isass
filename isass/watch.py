@@ -7,6 +7,7 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 from isass.helpers import get_source_dirs,get_source_files,distinct,split_paths
 from isass import SassCompiler
+import os.path
 
 
 class IsassEventHandler(FileSystemEventHandler):
@@ -18,7 +19,6 @@ class IsassEventHandler(FileSystemEventHandler):
         super(FileSystemEventHandler, self).__init__()
         
     def write_out(self):
-        
         lib_dirs = get_source_dirs(self.dirs)
         if self.lib_dirs:
             lib_dirs += self.lib_dirs
@@ -26,7 +26,11 @@ class IsassEventHandler(FileSystemEventHandler):
         
         compiler = SassCompiler(lib_dirs=lib_dirs)
         for sf in get_source_files(self.dirs,extension=self.extension):
+            print "Reading %s" % os.path.abspath(sf)
             compiler.read_file(sf)
+            
+            
+        print "Writing %s" % os.path.abspath(self.outfile)
         with open(self.outfile,'w') as of:
             of.write(compiler.get_css())
         
