@@ -51,7 +51,6 @@ def build(sass):
         return compiler.get_css()
     
 def start_watchdog():
-
     
     # Asserts
     assert args.output, "Please provide an output file via -o option, Standard output was not supported in watch mode."

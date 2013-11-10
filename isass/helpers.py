@@ -33,16 +33,19 @@ def get_source_files(sources,extension='.sass'):
         if os.path.isfile(p):
             source_files.append(p)
         elif os.path.isdir(p):
-            for _f in glob.iglob(os.path.join(p,'*.%s' % extension)):
+            for _f in glob.iglob(os.path.join(p,'*%s' % extension)):
                 source_files.append(os.path.abspath(_f))
     return sorted(distinct(source_files))
 
 def get_source_dirs(sources):
     source_dirs = []
     for s in sources:
-        p = os.path.abspath(os.path.dirname(s))
-        if os.path.isdir(p):
-            source_dirs.append(p)
+        if os.path.isdir(s):
+            source_dirs.append(s)
+        else:
+            p = os.path.abspath(os.path.dirname(s))
+            if os.path.isdir(p):
+                source_dirs.append(p)
             
     return sorted(distinct(source_dirs))
 
