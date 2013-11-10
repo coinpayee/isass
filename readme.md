@@ -42,7 +42,7 @@ From source:
     
 ### Syntax Reference
 
-The canonical syntax reference is part of the [Ruby Sass documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html)
+The canonical syntax reference is part of the [Ruby Sass documentation](http://sass-lang.com/docs/yardoc/file.SASS_REFERENCE.html#css_extensions)
 
 ### Command Line Interface
 
@@ -64,7 +64,24 @@ The canonical syntax reference is part of the [Ruby Sass documentation](http://s
       -l [LIB_DIRS], --lib-dir [LIB_DIRS]       Library dir to search for @imports.
       -e [EXTENSION], --extension [EXTENSION]   Search for this file extension.
       -w, --watch                               Watch for source modifications, and update output.
+      
+      
+#### CLI examples:
 
+    # Read SASS from sources.sass , and writes produced CSS into standard output
+    $ isass < source.sass
+    $ isass < source.sass > out.css
+
+    # Read SASS from all *.sass files in sources, extra-sources dirs and myfile.sass , then writes produced CSS into standard output
+    $ isass sources/ extra-sources/ myfile.sass > out.css
+    
+    # You can use -o or --output options to write the generated result into specific file.
+    $ isass -o out.css sources/
+
+    $ isass -c < source.sass
+    # Generates SCSS instead of CSS, from SASS file
+    
+    
 
 ### Watchdog
 
