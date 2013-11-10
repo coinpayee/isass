@@ -85,7 +85,7 @@ The canonical syntax reference is [sass-lang.com](http://sass-lang.com/guide)
  
     $ isass -c < source.sass
     
- Watch for changes in source files, and automatically update output on any changes.
+ Watches for changes in source files, and automatically update output on any changes.
  
     $ isass -wo out.css source-dir/
     

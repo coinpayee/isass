@@ -1,6 +1,6 @@
 
 
-__version__ = '0.1a'
+__version__ = '0.1'
 
 from .compiler import SassCompiler
 from .watch import SassObserver
