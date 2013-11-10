@@ -11,3 +11,4 @@ isass/tests/watch_dir/00-towatch.sass
 isass/tests/watch_dir/out.css
 isass/tests/style.css
 style.css
+isass/tests/styles.css
