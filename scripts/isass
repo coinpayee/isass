@@ -14,12 +14,12 @@ except ImportError:
 
 from isass import helpers
 
-parser = argparse.ArgumentParser(description='sass compiler.')
+parser = argparse.ArgumentParser(description='isass compiles SASS-indented-syntax into CSS or SCSS.')
 parser.add_argument('sources', nargs='*', default=[], help='Source files or directories to process. default: standard input. example: `./*.sass` or `.`')
 parser.add_argument('-o', '--output', metavar='OUTPUT' ,dest='output', help='Output file. default: standard output')
 parser.add_argument('-c','--scss', dest='scss', action='store_true', help='Skip scss compilation, just return scss contents.')
-parser.add_argument('-l','--lib-dir', dest='lib_dirs', nargs='?', action='append', help='library dir to search for @imports.')
-parser.add_argument('-e','--extension', dest='extension', nargs='?', default='*.sass',help='search for this file extension.')
+parser.add_argument('-l','--lib-dir', dest='lib_dirs', nargs='?', action='append', help='Library dir to search for @imports.')
+parser.add_argument('-e','--extension', dest='extension', nargs='?', default='*.sass',help='Search for this file extension.')
 
 
 parser.add_argument('-w','--watch', dest='watch', action='store_true', help='Watch for modifications, and update output.')

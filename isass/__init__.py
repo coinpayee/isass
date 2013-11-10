@@ -18,7 +18,7 @@ def get_scss(sass, lib_dirs=None):
 
 # live(outputs,lib_dirs=None)
 
-# TODO: scripts
+# TODO: scripts watchdog
 
 
 __all__ = ['__version__',
