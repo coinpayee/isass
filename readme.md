@@ -1,5 +1,18 @@
 
 # isass
 
-`isass` compiles SASS-indented-syntax into CSS. This is a beautiful space-indented format, similar to Javascript's [Stylus](http://learnboost.github.io/stylus/), but `isass` works entirely in the Python ecosystem.
+`isass` (Indented SASS) compiles [SASS-indented-syntax](http://sass-lang.com/documentation/file.INDENTED_SYNTAX.html) 
+into CSS or SCSS. 
+
+
+ `isass` uses [pyScss](https://github.com/Kronuz/pyScss) as its internal compiler, to compile `scss` to `css`. so `isass` is a `sass` to `scss` convertor, including: 
+
+* A watchdog to automatically reproduce output.css when one or more source files are changed.
+* A command line interfaces 
+
+
+## Installation
+
+    pip install sassin
+
 
