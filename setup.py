@@ -14,11 +14,14 @@ with open(os.path.join(os.path.dirname(__file__), 'isass', '__init__.py')) as v_
 
 description = \
 """`isass` is a Python compiler for indented-SASS-syntax
-files into CSS stylesheets. The full syntax requires `PySCSS`, but a limited syntax
-compiles straight to CSS. 
+files into SCSS or CSS stylesheets. 
 
 Docs at http://github.com/pylover/isass.
 """
+
+def long_description():
+    with open('README.rst') as f:
+        return f.read()
 
 
 setup(
@@ -28,10 +31,22 @@ setup(
     author_email='vahid.mardani@gmail.com',
     url='http://github.com/pylover/isass',
     description='compiles indented-SASS-syntax to CSS stylesheets',
-    long_description=description,
+    long_description=long_description(),
     license='MIT',
     install_requires=['pyscss>=1.2.0',
                       'watchdog>=0.6.0'],
     packages=['isass'],
     scripts=['scripts/isass'],
-)
+    classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Environment :: Console',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Topic :: Communications :: Email',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Utilities',
+        ],    
+    )
