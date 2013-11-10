@@ -13,7 +13,7 @@ from isass.helpers import distinct
 try:
     import scss
     if 'Scss' in dir(scss):
-        compile_scss = scss.Scss(scss_opts={'compress':False}).compile
+        compile_scss = scss.Scss(scss_opts={'compress':True}).compile
 except:
     compile_scss = None
 
