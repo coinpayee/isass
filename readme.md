@@ -85,8 +85,26 @@ The canonical syntax reference is part of the [Ruby Sass documentation](http://s
  
     $ isass -c < source.sass
     
+ Watch for changes in source files, and automatically update output on any changes.
+ 
+    $ isass -wo out.css source-dir/
     
 
 ### Watchdog
 
+You can use watchdog by CLI that mentioned above, Or from code:
+
+	from isass import SassObserver
+	
+    observer = SassObserver()    
+    observer.add_output('style.css', dirs='my-source-dir', lib_dirs='sass-libs')
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join() 
+    
+    
 
