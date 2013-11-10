@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser(description='sass compiler.')
 parser.add_argument('sources', nargs='*', default=[], help='Source files or directories to process. default: standard input. example: `./*.sass` or `.`')
 parser.add_argument('-o', '--output', metavar='OUTPUT' ,dest='output', help='Output file. default: standard output')
 parser.add_argument('-c','--scss', dest='scss', action='store_true', help='Skip scss compilation, just return scss contents.')
-parser.add_argument('-l','--lib-dir', dest='lib_dirs', nargs='*', action='append', help='library dir to search for @imports.')
+parser.add_argument('-l','--lib-dir', dest='lib_dirs', nargs='?', action='append', help='library dir to search for @imports.')
 parser.add_argument('-e','--extension', dest='extension', nargs='?', default='*.sass',help='search for this file extension.')
 
 
@@ -27,18 +27,18 @@ parser.add_argument('-w','--watch', dest='watch', action='store_true', help='Wat
 
 
 def read_source():
-    input = '' 
+    inp = '' 
     if args.sources:
         source_files = helpers.get_source_files(args.sources, args.extension)
         for f in source_files:
             with open(f) as reader:
-                input += reader.read()
-                input += '\n'
+                inp += reader.read()
+                inp += '\n'
     else:
         # reading from standard input
-        input += sys.stdin.read()
+        inp += sys.stdin.read()
         
-    return input
+    return inp
 
 def build(sass):
     compiler = isass.SassCompiler(lib_dirs=args.lib_dirs)
@@ -52,14 +52,14 @@ def build(sass):
 def main():
     global args
     args = parser.parse_args()
-    input = read_source()
+    inp = read_source()
      
     
     if args.output:
         with open(args.output,'w') as outfile:
-            outfile.write(build(input))
+            outfile.write(build(inp))
     else:
-        print build(input)
+        print build(inp)
         return
     
     #helpers.write_out(args.sources,args.output,scss=not args.scss)
