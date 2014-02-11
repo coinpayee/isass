@@ -1,0 +1,4 @@
+#! /bin/bash
+
+#sphinx-apidoc --force -o doc isass
+sphinx-build -Eab html docs/ docs/_build/

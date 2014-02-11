@@ -1,7 +1,6 @@
 # isass
 
-**isass** (Indented SASS) compiles [SASS-indented-syntax](http://sass-lang.com/documentation/file.INDENTED_SYNTAX.html) 
-into CSS or SCSS. 
+**isass** (Indented SASS) compiles [SASS-indented-syntax](http://sass-lang.com/documentation/file.INDENTED_SYNTAX.html) into CSS or SCSS. 
 
     import isass
     
@@ -16,9 +15,9 @@ into CSS or SCSS.
 
 **isass** uses [pyScss](https://github.com/Kronuz/pyScss) as its internal compiler, to compile *scss* to *css*. So **isass** is a *sass* to *scss* convertor, including: 
 
-* [All](#syntax-reference) pyScss [features](https://github.com/Kronuz/pyScss#features) are supported
-* A [**Command Line Interface**](#command-line-interface)
-* A [**Watchdog**](#watchdog) to automatically reproduce output.css when one or more source files are changed.
+ * [All](#syntax-reference) pyScss [features](https://github.com/Kronuz/pyScss#features) are supported
+ * A [**Command Line Interface**](#command-line-interface)
+ * A [**Watchdog**](#watchdog) to automatically reproduce output.css when one or more source files are changed.
 
 
 
