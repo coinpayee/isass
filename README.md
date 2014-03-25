@@ -106,7 +106,7 @@ Which produces:
 
 But of course you want to take advantage of the programmatic syntax extensions introduced by SASS. This will require that you pre-install the `PySCSS` module, and the compilation is then:
 
-    import sassin
+    import isass
 
     s = '''
     @mixin box($width)
@@ -115,7 +115,7 @@ But of course you want to take advantage of the programmatic syntax extensions i
       @include box(500)
     '''
 
-    print sassin.compile_with_scss(s)
+    print isass.get_css(s)
 
 #### Variable substitution
 
