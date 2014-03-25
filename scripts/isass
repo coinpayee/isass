@@ -78,6 +78,7 @@ def main():
     if args.watch:
         start_watchdog()
     else:
+        #TODO: standard output
         if args.output:
             with open(args.output,'w') as outfile:
                 outfile.write(build(inp))

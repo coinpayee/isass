@@ -386,8 +386,207 @@ $ python setup.py install
 </div>
 <div class="section" id="syntax-reference">
 <h1>Syntax Reference</h1>
+<div class="section" id="line-extensions">
+<h2>Line extensions</h2>
+<p>Lines ending with <tt class="docutils literal">,</tt> will be continued to the next line:</p>
+<pre class="literal-block">
+#container, #article_container, #sidebar_container,
+#footer_container, #useless_container
+  background-color: #DDD
+</pre>
+<p>That first line is treated is one whole line:</p>
+<pre class="literal-block">
+#container, #article_container, #sidebar_container #footer_container, #useless_container {
+  background-color: #DDD; }
+</pre>
+</div>
+<div class="section" id="comments">
+<h2>Comments</h2>
+<p>Comments are prefaced with <tt class="docutils literal">/*</tt> and is implemented on a per-line
+basis:</p>
+<pre class="literal-block">
+/* This is a comment
+/* This is another comment
+body
+  /* Yep, a short width
+  width: 50px
+</pre>
+<p>Will give:</p>
+<pre class="literal-block">
+/* This is a comment */
+/* This is another comment */
+body {
+  /* Yep, a short width */
+  width: 50px; }
+</pre>
+</div>
+<div class="section" id="imports">
+<h2>Imports</h2>
+<p>A handy little command is <tt class="docutils literal">&#64;import</tt> that - surprise surprise - imports
+an external <tt class="docutils literal">.sass</tt> file into the current <tt class="docutils literal">.sass</tt> file.</p>
+<p>So let's say you have a <tt class="docutils literal">night.sass</tt>:</p>
+<pre class="literal-block">
+body
+  background-color: black
+  color: white
+</pre>
+<p>Then in your file <tt class="docutils literal">style.sass</tt>:</p>
+<pre class="literal-block">
+&#64;import night.sass
+
+#sunny-message
+   background-color: white
+   color: yellow
+</pre>
+<p>Which produces:</p>
+<pre class="literal-block">
+body {
+  background-color: #000000;
+  color: #ffffff;
+}
+#sunny-message {
+  background-color: #ffffff;
+  color: #ffff00;
+}
+</pre>
+<p><tt class="docutils literal">isass</tt> looks for the filenames relative to the current working
+directory. Please don't abuse the imports, it doesn't check for circular
+imports - that would be your bad.</p>
+<p>But of course you want to take advantage of the programmatic syntax
+extensions introduced by SASS. This will require that you pre-install
+the <tt class="docutils literal">PySCSS</tt> module, and the compilation is then:</p>
+<pre class="literal-block">
+import sassin
+
+s = '''
+&#64;mixin box($width)
+  width: $width px
+body
+  &#64;include box(500)
+'''
+
+print sassin.compile_with_scss(s)
+</pre>
+</div>
+<div class="section" id="variable-substitution">
+<h2>Variable substitution</h2>
+<p>You can use variables, prefaced by a <tt class="docutils literal">$</tt>:</p>
+<pre class="literal-block">
+$highlight-color: #999
+#big-box
+  border: 1px solid $highlight-color
+#message
+  color: $highlight-color
+</pre>
+<p>Which makes it much easier to pass colors around, as in the resultant
+CSS:</p>
+<pre class="literal-block">
+#big-box {
+  border: 1px solid #999999;
+}
+#message {
+  color: #999999;
+}
+</pre>
+</div>
+<div class="section" id="expressions">
+<h2>Expressions</h2>
+<p>Cobble together simple expressions:</p>
+<pre class="literal-block">
+$big-width: 500
+#container
+  width: $big-width px
+$panel-left
+  float: left
+  width: $big-width/2 px
+</pre>
+<p>And we get, in the CSS:</p>
+<pre class="literal-block">
+#container {
+  width: 500 px;
+}
+$panel-left {
+  float: left;
+  width: 250 px;
+}
+</pre>
+<p>Just beware that <tt class="docutils literal">/</tt> will be intrepreted as a division expression, so
+if <tt class="docutils literal">/</tt> appears in <tt class="docutils literal">url()</tt> parameters, wrap it with quotation marks
+<tt class="docutils literal">&quot;&quot;</tt>.</p>
+</div>
+<div class="section" id="mix-ins-with-arguments">
+<h2>Mix-ins with arguments</h2>
+<p>Mix-ins that group common elements, and can take arguments, which are
+prefaced by <tt class="docutils literal">&#64;</tt>:</p>
+<pre class="literal-block">
+&#64;mixin left($dist)
+  float: left
+  margin-left: -$dist
+  width: $dist - 20
+  padding-right: 20
+
+#sidebar
+  &#64;include left(200px)
+</pre>
+<p>Gives:</p>
+<pre class="literal-block">
+#sidebar {
+  float: left;
+  margin-left: -200px;
+  width: 180px;
+  padding-right: 20;
+}
+</pre>
+</div>
+<div class="section" id="nesting">
+<h2>Nesting</h2>
+<p>Handy nesting, and self reference <tt class="docutils literal">&amp;</tt> to save even more typing:</p>
+<pre class="literal-block">
+#article
+  a
+    font:
+      family: Garamond
+    &amp;:link
+      text-decoration: none
+    &amp;:hover
+      text-decoration: underline
+</pre>
+<p>Flattens out into:</p>
+<pre class="literal-block">
+#article a {
+  font-family: Garamond;
+}
+#article a:link {
+  text-decoration: none;
+}
+#article a:hover {
+  text-decoration: underline;
+}
+</pre>
+</div>
+<div class="section" id="class-extensions">
+<h2>Class Extensions</h2>
+<p>Extend a class with a new twist:</p>
+<pre class="literal-block">
+#message
+  border: 1px solid red
+
+#bad-message
+  &#64;extend #message
+  background-color: red
+</pre>
+<p>Creates a similar class quite easily:</p>
+<pre class="literal-block">
+#bad-message, #message {
+  border: 1px solid #ff0000;
+}
+#bad-message {
+  background-color: #ff0000;
+}
+</pre>
 <p>The canonical syntax reference is
 <a class="reference external" href="http://sass-lang.com/guide">sass-lang.com</a></p>
+</div>
 </div>
 <div class="section" id="command-line-interface">
 <h1>Command Line Interface</h1>
