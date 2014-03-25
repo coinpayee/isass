@@ -144,7 +144,7 @@ the ``PySCSS`` module, and the compilation is then:
 
 ::
 
-    import sassin
+    import isass
 
     s = '''
     @mixin box($width)
@@ -153,7 +153,7 @@ the ``PySCSS`` module, and the compilation is then:
       @include box(500)
     '''
 
-    print sassin.compile_with_scss(s)
+    print isass.get_css(s)
 
 Variable substitution
 ^^^^^^^^^^^^^^^^^^^^^

@@ -456,7 +456,7 @@ imports - that would be your bad.</p>
 extensions introduced by SASS. This will require that you pre-install
 the <tt class="docutils literal">PySCSS</tt> module, and the compilation is then:</p>
 <pre class="literal-block">
-import sassin
+import isass
 
 s = '''
 &#64;mixin box($width)
@@ -465,7 +465,7 @@ body
   &#64;include box(500)
 '''
 
-print sassin.compile_with_scss(s)
+print isass.get_css(s)
 </pre>
 </div>
 <div class="section" id="variable-substitution">
