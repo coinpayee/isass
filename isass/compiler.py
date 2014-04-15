@@ -57,7 +57,7 @@ class SassCompiler(object):
             raw_indent = len(line) - len(line.lstrip())
             if state['first_indent'] is None:
                 state['first_indent'] = raw_indent
-            indent = raw_indent - state['first_indent']  
+            indent = raw_indent - state['first_indent']
         
             if indent == sum(state['prev_indents']):
         
