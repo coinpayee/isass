@@ -56,7 +56,7 @@ class SassObserver(Observer):
         handler = IsassEventHandler(outfile, dirs,lib_dirs=lib_dirs)
         handler.write_out()
         for d in dirs:
-            self.schedule(handler, d, recursive=True)
+            self.schedule(handler, d, recursive=False)
 
     def add_manifest(self,manifest):
         manifest = Manifest(manifest)
