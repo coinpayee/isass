@@ -1,0 +1,6 @@
+
+regular:
+  output: 'manifest.out.css'
+  sources:
+    - watch_dir
+
