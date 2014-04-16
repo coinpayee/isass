@@ -7,7 +7,6 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 from isass.helpers import get_source_dirs,get_source_files,distinct,split_paths
 from isass import SassCompiler
-from pymlconf import ConfigManager
 import os.path
 from isass.manifest import Manifest
 
