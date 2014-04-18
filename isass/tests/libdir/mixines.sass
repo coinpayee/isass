@@ -1,0 +1,33 @@
+
+
+
+@mixin linear-gradient($direction,$color1,$color2,$safe-color)
+  background: $safe-color
+  background: -webkit-linear-gradient( $direction, $color1, $color2 )
+  background:    -moz-linear-gradient( $direction, $color1, $color2 )
+  background:     -ms-linear-gradient( $direction, $color1, $color2 )
+  background:      -o-linear-gradient( $direction, $color1, $color2 )
+  background:         linear-gradient( $direction, $color1, $color2 )
+
+
+@mixin transition($trans)
+  -webkit-transition: $trans
+  -moz-transition: $trans
+  -o-transition: $trans
+  transition: $trans
+
+@mixin background-size($args)
+  -webkit-background-size: $args;
+  -moz-background-size: $args;
+  -o-background-size: $args;
+  background-size: $args;
+
+@mixin opacity($v)
+  $vv = $v * 100
+  filter: alpha(opacity=$vv);
+  -moz-opacity:$v
+  -khtml-opacity:$v
+  opacity:$v
+
+
+

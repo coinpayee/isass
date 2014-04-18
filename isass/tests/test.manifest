@@ -1,6 +1,9 @@
 
 regular:
   output: 'manifest.out.css'
+  libdirs:
+    - libdir
   sources:
     - watch_dir
+    - oondex.sass
 
