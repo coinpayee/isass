@@ -13,7 +13,7 @@ from isass.helpers import distinct
 try:
     import scss
     if 'Scss' in dir(scss):
-        compile_scss = scss.Scss(scss_opts={'compress':True}).compile
+        compile_scss = scss.Scss(scss_opts={'compress': True}).compile
 except:
     compile_scss = None
 
@@ -65,15 +65,22 @@ class SassCompiler(object):
                     import_fname = state['prev_line'].split()[1]
                     if import_fname.startswith('"'):
                         import_fname = import_fname[1:-1]
-                    
+
+                    if not import_fname.endswith('.sass'):
+                        import_fname += '.sass'
+
                     if self.lib_dirs:
                         for d in self.lib_dirs:
-                            if os.path.isfile(os.path.join(d,import_fname)):
-                                import_fname = os.path.join(d,import_fname)
+                            if os.path.isfile(os.path.join(d, import_fname)):
+                                import_fname = os.path.join(d, import_fname)
                                 break                
-                    
+
                     if not os.path.isfile(import_fname):
-                        raise IOError('Error: @import {0} not found at {1}:{2}'.format(import_fname, source_fname, i_line))
+                        import_fname = os.path.join(os.path.dirname(source_fname), import_fname)
+
+                        if not os.path.isfile(import_fname):
+                            raise IOError('Error: @import {0} not found at {1}:{2}'.format(import_fname, source_fname, i_line))
+
                     state['prev_line'] = self.scss_from_sassfile(import_fname)
                 
                 elif not is_comment and state['prev_line']:
@@ -133,4 +140,4 @@ class SassCompiler(object):
         if compile_scss is None:
             raise "Error: couldn't load a SCSS compiler"
         return compile_scss(self._scss_buffer)
-        
+
