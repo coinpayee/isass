@@ -9,6 +9,7 @@ from isass.helpers import get_source_dirs,get_source_files,distinct,split_paths
 from isass import SassCompiler
 import os.path
 from isass.manifest import Manifest
+import sys
 
 
 class IsassEventHandler(FileSystemEventHandler):
@@ -23,25 +24,29 @@ class IsassEventHandler(FileSystemEventHandler):
         super(FileSystemEventHandler, self).__init__()
 
     def write_out(self):
-        lib_dirs = get_source_dirs(self.dirs)
-        if self.lib_dirs:
-            lib_dirs += self.lib_dirs
-        lib_dirs = distinct(lib_dirs)
+        try:
+            lib_dirs = get_source_dirs(self.dirs)
+            if self.lib_dirs:
+                lib_dirs += self.lib_dirs
+            lib_dirs = distinct(lib_dirs)
 
-        compiler = SassCompiler(lib_dirs=lib_dirs)
-        for sf in self.source_files:
-            print "Reading %s" % os.path.abspath(sf)
-            compiler.read_file(sf)
+            compiler = SassCompiler(lib_dirs=lib_dirs)
+            for sf in self.source_files:
+                print "Reading %s" % os.path.abspath(sf)
+                compiler.read_file(sf)
 
-        print "Writing %s" % os.path.abspath(self.outfile)
-        with open(self.outfile,'w') as of:
-            of.write(compiler.get_css())
+            print "Writing %s" % os.path.abspath(self.outfile)
+            with open(self.outfile, 'w') as of:
+                of.write(compiler.get_css())
+        except:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            traceback.print_exception(exc_type, exc_value, exc_traceback)
 
-    def on_any_event(self,event):
+    def on_any_event(self, event):
         paths = []
-        if hasattr(event,'src_path'):
+        if hasattr(event, 'src_path'):
             paths += split_paths(event.src_path)
-        if hasattr(event,'dest_path'):
+        if hasattr(event, 'dest_path'):
             paths += split_paths(event.dest_path)
 
         changed = False
@@ -64,10 +69,10 @@ class IsassEventHandler(FileSystemEventHandler):
 
 class SassObserver(Observer):
 
-    def add_output(self,outfile,dirs=None,files=None,lib_dirs=None):
+    def add_output(self, outfile, dirs=None, files=None, lib_dirs=None):
         dirs = distinct(split_paths(dirs))
 
-        handler = IsassEventHandler(outfile, dirs,files=files,lib_dirs=lib_dirs)
+        handler = IsassEventHandler(outfile, dirs, files=files, lib_dirs=lib_dirs)
         watch_dirs = list(dirs)
 
         if lib_dirs:
