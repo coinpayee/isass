@@ -15,11 +15,11 @@ def splitlines(text):
 
 
 def split_paths(p):
-    if isinstance(p,basestring):
+    if isinstance(p, basestring):
         res = p.split(',')
     else:
         res = p
-    return [os.path.abspath(i.strip()) for i in res ]
+    return [os.path.abspath(i.strip()) for i in res]
 
 def distinct(l):
     if not l or not len(l):

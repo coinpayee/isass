@@ -10,6 +10,7 @@ from isass import SassCompiler
 import os.path
 from isass.manifest import Manifest
 import sys
+import traceback
 
 
 class IsassEventHandler(FileSystemEventHandler):
@@ -70,6 +71,15 @@ class IsassEventHandler(FileSystemEventHandler):
 class SassObserver(Observer):
 
     def add_output(self, outfile, dirs=None, files=None, lib_dirs=None):
+        if dirs is None:
+            dirs = []
+
+        if files is None:
+            files = []
+
+        if lib_dirs is None:
+            lib_dirs = []
+
         dirs = distinct(split_paths(dirs))
 
         handler = IsassEventHandler(outfile, dirs, files=files, lib_dirs=lib_dirs)

@@ -46,7 +46,9 @@ class SassCompiler(object):
                 return
             else:
                 state['line_buffer'] = ''
-        
+
+            if state['prev_line'].strip().startswith('//'):
+                state['prev_line']= state['prev_line'].replace('//', '/*')
             is_comment = state['prev_line'].strip().startswith('/*')
             if is_comment:
                 text = state['prev_line'].rstrip()
